@@ -1,0 +1,24 @@
+# docker compose file for the mongodb container and the api container
+
+version: '2'
+
+services:
+
+
+  mongo:
+    image: mongo:latest
+    container_name: hp_mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./data:/data/db
+    restart: always
+
+  api:
+    build: .
+    container_name: hp_api
+    ports:
+      - "8000:8000"
+    links:
+      - mongo
+    restart: always

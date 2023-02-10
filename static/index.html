@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>IMDB title.basic API demo</title>
+    <style>
+      .center {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      .button {
+        padding: 10px 20px;
+        background-color: blue;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      table {
+        font-family: Arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+        margin: 20px 0;
+      }
+
+      td, th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+      }
+
+      th {
+        background-color: #dddddd;
+        font-weight: bold;
+      }
+
+      tr:nth-child(even) {
+        background-color: #f2f2f2;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="center">
+      <div>
+        <h1>IMDB title.basic API demo</h1>
+        <button id="random" class="button">Random</button>
+        <h2 id="response"></h2>
+      </div>
+    </div>
+
+    <script>
+      const randomButton = document.getElementById("random");
+      randomButton.addEventListener("click", () => {
+        fetch("/random")
+          .then(response => response.json())
+          .then(data => {
+            // remove first and last character from the response
+            data = data.substring(1, data.length - 1);
+            // split the response into an array
+            data = data.split(",");
+            // create an object from the array
+            data = Object.fromEntries(data.map(item => item.split(":")));
+            // display the response in a table format
+            let response = "<table>";
+            for (let [key, value] of Object.entries(data)){
+              response +=`<tr><td>${key}</td><td>${value}</td></tr>`;
+            }
+            response +="</table>";
+            document.getElementById("response").innerHTML = response;
+            console.log(data);
+          })
+          .catch(error => {
+            console.error(error);
+            alert("An error occurred while fetching the data.");
+          });
+      });
+    </script>
+  </body>
+</html>
